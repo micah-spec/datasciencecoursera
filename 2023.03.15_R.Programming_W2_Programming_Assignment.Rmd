@@ -1,0 +1,161 @@
+---
+title: "W2-Programming-Assignment"
+author: "Micah Turner"
+date: "2023-03-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Part 1
+Load dplyr and readr. Then Aggregate the data.
+
+
+# Aggregate the data
+```{r}
+#Set working directory
+setwd("C:/Users/micaz/Documents/GitHub/datasciencecoursera/rprog_data_specdata/specdata")
+
+#Load required packages
+library(dplyr)
+library(readr)
+library(data.table)
+
+#Aggregate data
+sensor_df <- list.files(path = "C:/Users/micaz/Documents/GitHub/datasciencecoursera/rprog_data_specdata/specdata") %>%
+  lapply(read_csv) %>%
+  bind_rows
+```
+
+# Working through the function
+```{r}
+# Pollutantmean Function
+pollutantmean <- function(df, pollutant, value){
+  pfilter <- subset(df, select = c(pollutant, "ID", "Date"), ID %in% value)
+  mean(pfilter[[pollutant]], na.rm = TRUE)
+}
+
+# Peek Function
+peek <- function(df, pollutant, value){
+  pfilter <- subset(df, select = c(pollutant, "ID", "Date"), ID %in% value)
+  clean <- pfilter[complete.cases(pfilter), ]
+  sum(clean[,c(1)])
+  View(clean)
+}
+
+# Complete Function
+complete <- function(df, value){
+  iden <- filter(df, ID %in% value)
+  com <- iden[complete.cases(iden), ]
+  cnt <- com %>%
+    count(com$ID)
+  View(cnt)
+}
+
+
+
+```
+
+
+
+```{r}
+complete <- function(df, id = 1:332){
+  iden <- df[which(df[, "ID"] %in% id), ]
+  com <- iden[complete.cases(iden), ]
+  cnt <- com %>%
+    count(com$ID)
+  View(cnt)
+}
+
+```
+
+```{r}
+
+
+```
+
+
+```{r}
+
+
+#Remove NA values and view first 6 rows
+good <- complete.cases(sensor_df)
+head(sensor_df[good, ])
+
+#Data frame with just the good data
+sensorcomp <- sensor_df[good, ]
+
+#Subset based on ID column
+subset(sensorcomp, ID == 2)
+
+#The solution in non-function form
+y <- subset(sensorcomp, ID == 2)
+mean(y$sulfate)
+
+#Get the mean of a data frame from the name of the column
+test1 <- function(df, col_name) {
+  mean(df[[col_name]])
+}
+  
+#Filter data frame based on a column value (this needs the data.table library!!!)
+test2 <- function(df, value){
+  subset(df, ID == value) 
+}
+
+#Combining Test1 and Test2 - it appears to work!!!
+t3 <- function(df, value, pollutant){
+  filtered <- subset(df, ID == value) 
+  mean(filtered[[pollutant]])
+}
+
+#Putting it all together
+pollutantmean <- function(df, pollutant, value){
+  filter <- subset(df, select = c(pollutant, "ID", "Date") 
+                   mean(clean[[pollutant]])
+}
+  
+t4 <- function(df, pollutant){
+  pfilter <- subset(df, select = c(pollutant, "ID", "Date" ))
+  head(pfilter)
+}
+
+pollutantmean <- function(df, pollutant, id = 1:332){
+  filter <- subset(df, select = c(pollutant, id, "Date" ))
+  mean(filter[[pollutant]], na.rm = TRUE)
+}
+
+#This works
+pollutantmean <- function(df, pollutant, value){
+  pfilter <- subset(df, select = c(pollutant, "ID", "Date"), ID == value)
+  mean(pfilter[[pollutant]], na.rm = TRUE)
+}
+
+#Experimentation
+pollutantmean <- function(df, pollutant, value){
+  pfilter <- subset(df, select = c(pollutant, "ID", "Date"), ID == value)
+  clean <- pfilter[complete.cases(pfilter), ]
+  mean(clean[[pollutant]])
+}
+
+#Have a Peak at the data
+peek <- function(df, pollutant, value){
+  pfilter <- subset(df, select = c(pollutant, "ID", "Date"), ID == value)
+  clean <- pfilter[complete.cases(pfilter), ]
+  sum(clean[,c(1)])
+  View(clean)
+}
+
+avg <- function(df, pollutant, value){
+  pfilter <- subset(df, select = c(pollutant, "ID", "Date"), ID == value)
+  clean <- pfilter[complete.cases(pfilter), ]
+  sum(clean[,c(1)])/nrow(clean)
+}
+```
+```{r}
+pollutantmean <- function(df = sensor_df, pollutant, id = 1:332, na.rm = TRUE) {
+  mean(pollutant)
+}
+```
+sensor_df[sensor_df$ID < 2]
